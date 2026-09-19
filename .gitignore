@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Env files (لا تُرفع أبداً بأي مفتاح)
+.env
+.env.*
+.env.local
+.env.production
+
+# Node (إن استُخدم لاحقاً)
+node_modules/
