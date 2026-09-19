@@ -112,9 +112,16 @@
     const inCart = state.cart.find((c) => c.id === item.id);
     const qty = inCart ? inCart.qty : 0;
     const dietLabel = t(`badges.${item.diet}`);
+    const cat = MENU_CATEGORIES.find((c) => c.id === item.cat);
+    const catImg = cat ? cat.img : "assets/img/hero.jpg";
+    const imgPath = `assets/img/dishes/${item.id}.jpg`;
 
     return `
       <article class="dish" data-id="${item.id}">
+        <div class="dish-img">
+          <img src="${imgPath}" alt="${name}" loading="lazy"
+            onerror="this.onerror=null; this.src='${catImg}';" />
+        </div>
         <div class="dish-top">
           <div class="dish-name">${name}<span class="de">${sub}</span></div>
           <div class="price">${fmtEuro(item.price)}</div>
