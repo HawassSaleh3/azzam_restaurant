@@ -1,7 +1,10 @@
 /* =====================================================================
-   Azzam Restaurant — UI Translations (ar / en)
-   كل نصوص الواجهة هنا. أسماء الأصناف الألمانية ثابتة في بيانات القائمة.
+   Azzam Restaurant — UI Translations (ar / en / de)
+   كل نصوص الواجهة هنا. أسماء الأصناف في بيانات القائمة (de/en/ar).
    ===================================================================== */
+
+const LANG_NAMES = { ar: "العربية", en: "English", de: "Deutsch" };
+const LANG_ORDER = ["ar", "en", "de"];
 
 const I18N = {
   ar: {
@@ -266,5 +269,137 @@ const I18N = {
     },
     langBtn: "عربي",
     langLabel: "Language"
+  },
+
+  de: {
+    dir: "ltr",
+    code: "de",
+    nav: {
+      home: "Start",
+      menu: "Speisekarte",
+      about: "Über uns",
+      location: "Standort",
+      contact: "Kontakt",
+      order: "Jetzt bestellen"
+    },
+    hero: {
+      welcome: "Willkommen im Azzam Restaurant",
+      tagline: "Das leckerste Arabische Essen in Berlin Neukölln",
+      sub: "Vegan • Vegetarisch • Fleisch & Grill — von Chef Hussam Azzam",
+      ctaOrder: "Über WhatsApp bestellen",
+      ctaMenu: "Speisekarte ansehen"
+    },
+    badges: {
+      vegan: "Vegan 🌱",
+      veg: "Vegetarisch 🥗",
+      meat: "Fleisch 🥩",
+      openNow: "Jetzt geöffnet",
+      closedNow: "Geschlossen"
+    },
+    menu: {
+      title: "Unsere Speisekarte",
+      subtitle: "Authentische arabische Gerichte zu fairen Preisen",
+      search: "Gericht suchen…",
+      all: "Alle",
+      add: "Hinzufügen",
+      added: "Hinzugefügt",
+      items: "Gerichte",
+      veganOnly: "Nur vegane Optionen"
+    },
+    cart: {
+      title: "Dein Warenkorb",
+      empty: "Dein Warenkorb ist leer — füge deine Lieblingsgerichte hinzu",
+      subtotal: "Zwischensumme",
+      deliveryFee: "Liefergebühr",
+      freeDelivery: "Wird bei Bestätigung festgelegt",
+      total: "Gesamt (ca.)",
+      checkout: "Bestellung über WhatsApp abschließen",
+      clear: "Warenkorb leeren",
+      remove: "Entfernen",
+      name: "Name",
+      notes: "Anmerkungen",
+      pickOrderType: "Bestellart wählen",
+      delivery: "Lieferung",
+      pickup: "Abholung",
+      orderTypeDelivery: "🚗 Lieferung",
+      orderTypePickup: "🏠 Abholung"
+    },
+    checkout: {
+      title: "Bestellung abschließen",
+      subtitle: "Fülle deine Daten aus und die Bestellung geht per WhatsApp an das Restaurant",
+      fullName: "Vollständiger Name",
+      fullNamePh: "z. B. Ahmed Mohammad",
+      phone: "Telefonnummer",
+      phonePh: "+49 170 1234567",
+      city: "Stadt",
+      cityPh: "Berlin",
+      district: "Bezirk",
+      districtPh: "z. B. Neukölln",
+      address: "Vollständige Adresse",
+      addressPh: "Straße, Hausnummer, Etage, Klingel…",
+      notes: "Anmerkungen (optional)",
+      notesPh: "Ohne Zwiebeln, etwas scharf, ohne Knoblauch…",
+      submitDelivery: "Lieferbestellung über WhatsApp senden",
+      submitPickup: "Abholbestellung über WhatsApp senden",
+      requiredHint: "Alle Felder außer Anmerkungen sind Pflicht"
+    },
+    about: {
+      title: "Unsere Geschichte",
+      subtitle: "Geschmack der Levante im Herzen von Neukölln",
+      p1: "Das Azzam Restaurant liegt im lebendigen Neukölln, wo levantinische Küche auf echte arabische Gastfreundschaft trifft.",
+      p2: "Von cremigem Hummus und knusprigem Falafel bis zu Grillgerichten — alles wird täglich frisch und mit Sorgfalt zubereitet.",
+      p3: "Für alle etwas dabei: vegan, vegetarisch und Fleisch — faire Preise und großzügige Portionen.",
+      chef: "Chef",
+      chefName: "Hussam Azzam",
+      since: "Seit Jahren in Berlin",
+      features: [
+        { icon: "🍲", title: "Levantinische Wurzeln", desc: "Hausrezepte über Generationen weitergegeben" },
+        { icon: "🥬", title: "Täglich frisch", desc: "Zutaten jeden Morgen ausgewählt" },
+        { icon: "🌱", title: "Für alle", desc: "Vegan, vegetarisch & Fleisch — für jeden Gast" },
+        { icon: "💶", title: "Faire Preise", desc: "Bester Geschmack zum besten Preis in Berlin" }
+      ]
+    },
+    location: {
+      title: "Finde uns",
+      subtitle: "Wir freuen uns auf deinen Besuch",
+      address: "Adresse",
+      hours: "Öffnungszeiten",
+      openDays: "Täglich",
+      openTime: "08:00 – 00:00",
+      phone: "Telefon",
+      directions: "Route anzeigen",
+      openInMaps: "In Google Maps öffnen"
+    },
+    contact: {
+      title: "Kontaktiere uns",
+      subtitle: "Ruf an, schreib uns auf WhatsApp oder komm vorbei",
+      whatsappBtn: "Schreib uns auf WhatsApp",
+      callBtn: "Ruf uns an",
+      instagramBtn: "Folge uns auf Instagram"
+    },
+    footer: {
+      tagline: "Das leckerste Arabische Essen in Berlin",
+      quickLinks: "Schnelllinks",
+      menu: "Speisekarte",
+      contact: "Kontakt",
+      follow: "Folge uns",
+      rights: "Alle Rechte vorbehalten",
+      chef: "Chef: Hussam Azzam"
+    },
+    cta: {
+      title: "Hungrig? Jetzt bestellen!",
+      sub: "Stell deine Bestellung zusammen und erreiche uns in Sekunden über WhatsApp — immer frisch und heiß"
+    },
+    toast: {
+      cartAdded: "Zum Warenkorb hinzugefügt ✓",
+      cartRemoved: "Aus dem Warenkorb entfernt",
+      cartCleared: "Warenkorb geleert",
+      cartEmpty: "Dein Warenkorb ist leer",
+      copyDone: "Kopiert ✓",
+      fillRequired: "Bitte fülle alle Pflichtfelder aus",
+      phoneInvalid: "Bitte gib eine gültige Telefonnummer ein"
+    },
+    langBtn: "العربية",
+    langLabel: "Sprache"
   }
 };

@@ -28,6 +28,18 @@
     return key.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : key), dict);
   };
 
+  const nextLang = () => {
+    const i = LANG_ORDER.indexOf(state.lang);
+    return LANG_ORDER[(i + 1) % LANG_ORDER.length];
+  };
+
+  const itemName = (item, lang = state.lang) => item[lang] || item.de || item.ar;
+
+  const itemSub = (item) => {
+    if (state.lang === "ar") return item.de;
+    return item.ar;
+  };
+
   const fmtEuro = (n) => {
     return n.toFixed(2).replace(".", ",") + " €";
   };
@@ -37,6 +49,12 @@
     document.documentElement.lang = state.lang;
     document.documentElement.dir = I18N[state.lang].dir;
     document.body.classList.toggle("rtl", state.lang === "ar");
+  }
+
+  function setDirDependentStyles() {
+    const isRTL = state.lang === "ar";
+    document.documentElement.style.setProperty("--dir-side-start", isRTL ? "right" : "left");
+    document.documentElement.style.setProperty("--dir-side-end", isRTL ? "left" : "right");
   }
 
   function bindStaticTexts() {
@@ -51,7 +69,7 @@
       if (typeof value === "string") el.setAttribute("placeholder", value);
     });
     const lb = $("#lang-btn-label");
-    if (lb) lb.textContent = t("langBtn");
+    if (lb) lb.textContent = LANG_NAMES[nextLang()] || "English";
 
     // brand mark letter responds to language
     $$(".brand-mark").forEach((el) => (el.textContent = state.lang === "ar" ? "ع" : "A"));
@@ -65,6 +83,7 @@
   function setLanguage(lang) {
     state.lang = lang;
     persistLang();
+    setDirDependentStyles();
     buildCatTabs();
     buildFeatures();
     buildMenu();
@@ -87,11 +106,14 @@
       block.dataset.cat = cat.id;
       if (visible.length === 0) block.classList.add("category-hidden");
 
-      const title = state.lang === "ar" ? cat.ar : cat.de;
+      const title = itemName(cat);
       block.innerHTML = `
         <div class="cat-head">
-          <h3>${title}</h3>
-          <span class="cat-tagline">${items.length} ${t("menu.items")}</span>
+          <div class="cat-head-img"><img src="${cat.img}" alt="${title}" loading="lazy" /></div>
+          <div class="cat-head-txt">
+            <h3>${title}</h3>
+            <span class="cat-tagline">${items.length} ${t("menu.items")}</span>
+          </div>
         </div>
         <div class="menu-grid">
           ${items.map((item) => dishCard(item)).join("")}
@@ -106,9 +128,8 @@
   }
 
   function dishCard(item) {
-    const isAr = state.lang === "ar";
-    const name = isAr ? item.ar : item.de;
-    const sub = isAr ? item.de : item.ar;
+    const name = itemName(item);
+    const sub = itemSub(item);
     const inCart = state.cart.find((c) => c.id === item.id);
     const qty = inCart ? inCart.qty : 0;
     const dietLabel = t(`badges.${item.diet}`);
@@ -147,7 +168,7 @@
     if (state.veganOnly && item.diet !== "vegan") return false;
     if (state.search) {
       const q = state.search.toLowerCase();
-      const hay = `${item.de} ${item.ar}`.toLowerCase();
+      const hay = `${item.de} ${item.ar} ${item.en || ""}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -247,8 +268,8 @@
     const body = $("#cart-body");
     const lines = state.cart.map((c) => {
       const item = MENU_ITEMS.find((i) => i.id === c.id);
-      const name = state.lang === "ar" ? item.ar : item.de;
-      const sub = state.lang === "ar" ? item.de : item.ar;
+      const name = itemName(item);
+      const sub = itemSub(item);
       return `
         <div class="cart-line" data-id="${c.id}">
           <div class="cl-info">
@@ -319,45 +340,72 @@
   function buildOrderLinesText() {
     const lines = state.cart.map((c) => {
       const item = MENU_ITEMS.find((i) => i.id === c.id);
-      const name = state.lang === "ar" ? item.ar : `${item.de} (${item.ar})`;
+      const name = itemName(item);
+      const labels = {
+        ar: { type: "النوع", total: "الإجمالي" },
+        de: { type: "Typ", total: "Gesamt" },
+        en: { type: "Type", total: "Total" }
+      };
+      const L = labels[state.lang] || labels.en;
       return `• ${name} x${c.qty} — ${fmtEuro(c.qty * c.price)}`;
     });
     const orderTypeLabel = state.orderType === "pickup" ? t("cart.orderTypePickup") : t("cart.orderTypeDelivery");
+    const labels = {
+      ar: { type: "النوع", total: "الإجمالي" },
+      de: { type: "Typ", total: "Gesamt" },
+      en: { type: "Type", total: "Total" }
+    };
+    const L = labels[state.lang] || labels.en;
     let txt = lines.join("\n");
-    txt += `\n${state.lang === "ar" ? "النوع" : "Type"}: ${orderTypeLabel}`;
-    txt += `\n${state.lang === "ar" ? "الإجمالي" : "Total"}: ${fmtEuro(cartTotal())}`;
+    txt += `\n${L.type}: ${orderTypeLabel}`;
+    txt += `\n${L.total}: ${fmtEuro(cartTotal())}`;
     return txt;
   }
 
   function buildWhatsAppMessage(form) {
     const isPickup = state.orderType === "pickup";
-    const L = state.lang === "ar"
-      ? {
-          order: "🛒 طلب جديد من موقع مطعم عزّام",
-          type: "نوع الطلب",
-          delivery: "توصيل",
-          pickup: "استلام من المطعم",
-          name: "الاسم الكامل",
-          phone: "رقم الهاتف",
-          city: "المدينة",
-          district: "المنطقة",
-          address: "العنوان بالتفاصيل",
-          notes: "ملاحظات",
-          total: "الإجمالي"
-        }
-      : {
-          order: "🛒 New order from the Azzam Restaurant website",
-          type: "Order type",
-          delivery: "Delivery",
-          pickup: "Pickup",
-          name: "Full name",
-          phone: "Phone",
-          city: "City",
-          district: "District",
-          address: "Address details",
-          notes: "Notes",
-          total: "Total"
-        };
+    const labels = {
+      ar: {
+        order: "🛒 طلب جديد من موقع مطعم عزّام",
+        type: "نوع الطلب",
+        delivery: "توصيل",
+        pickup: "استلام من المطعم",
+        name: "الاسم الكامل",
+        phone: "رقم الهاتف",
+        city: "المدينة",
+        district: "المنطقة",
+        address: "العنوان بالتفاصيل",
+        notes: "ملاحظات",
+        total: "الإجمالي"
+      },
+      de: {
+        order: "🛒 Neue Bestellung über die Azzam Restaurant Website",
+        type: "Bestellart",
+        delivery: "Lieferung",
+        pickup: "Abholung",
+        name: "Vollständiger Name",
+        phone: "Telefonnummer",
+        city: "Stadt",
+        district: "Bezirk",
+        address: "Vollständige Adresse",
+        notes: "Anmerkungen",
+        total: "Gesamt"
+      },
+      en: {
+        order: "🛒 New order from the Azzam Restaurant website",
+        type: "Order type",
+        delivery: "Delivery",
+        pickup: "Pickup",
+        name: "Full name",
+        phone: "Phone",
+        city: "City",
+        district: "District",
+        address: "Address details",
+        notes: "Notes",
+        total: "Total"
+      }
+    };
+    const L = labels[state.lang] || labels.en;
 
     const lines = state.cart.map((c) => {
       const item = MENU_ITEMS.find((i) => i.id === c.id);
@@ -368,7 +416,7 @@
       `${L.order} 🍽`,
       "------------------------------",
       ...lines,
-      `\n${state.lang === "ar" ? "الإجمالي" : "Total"}: ${fmtEuro(cartTotal())}`,
+      `\n${L.total}: ${fmtEuro(cartTotal())}`,
       "------------------------------",
       `📍 ${L.type}: ${isPickup ? L.pickup : L.delivery}`,
       `🧑 ${L.name}: ${form.fullName}`,
@@ -415,7 +463,12 @@
     buildMenu();
     renderCart();
     closeDrawer();
-    toast("✓ " + (state.lang === "ar" ? "تم فتح واتساب لإتمام طلبك" : "WhatsApp opened to complete your order"), "ok");
+    const done = {
+      ar: "✓ تم فتح واتساب لإتمام طلبك",
+      de: "✓ WhatsApp wurde geöffnet, um deine Bestellung abzuschließen",
+      en: "✓ WhatsApp opened to complete your order"
+    };
+    toast(done[state.lang] || done.en, "ok");
   }
 
   /* ---------------- drawers & modals ---------------- */
@@ -470,7 +523,7 @@
       const b = document.createElement("button");
       b.className = "cat-tab";
       b.dataset.cat = cat.id;
-      b.textContent = state.lang === "ar" ? cat.ar : cat.de;
+      b.textContent = itemName(cat);
       wrap.appendChild(b);
     });
   }
@@ -520,9 +573,12 @@
   }
 
   function defaultWaText() {
-    return state.lang === "ar"
-      ? "مرحباً مطعم عزّام، لدي استفسار 🌟"
-      : "Hello Azzam Restaurant, I have a question 🌟";
+    const txt = {
+      ar: "مرحباً مطعم عزّام، لدي استفسار 🌟",
+      de: "Hallo Azzam Restaurant, ich habe eine Frage 🌟",
+      en: "Hello Azzam Restaurant, I have a question 🌟"
+    };
+    return txt[state.lang] || txt.en;
   }
   function bindEvents() {
     // nav scroll
@@ -534,8 +590,8 @@
     $("#burger").addEventListener("click", () => $("#nav-links").classList.toggle("open"));
     $$("#nav-links a").forEach((a) => a.addEventListener("click", () => $("#nav-links").classList.remove("open")));
 
-    // language
-    $("#lang-btn").addEventListener("click", () => setLanguage(state.lang === "ar" ? "en" : "ar"));
+    // language cycle: ar → en → de
+    $("#lang-btn").addEventListener("click", () => setLanguage(nextLang()));
 
     // category tabs
     $(".cat-tabs").addEventListener("click", (e) => {
@@ -614,6 +670,7 @@
 
   /* ---------------- init ---------------- */
   function init() {
+    setDirDependentStyles();
     renderStaticTexts();
     bindStaticTexts();
     buildFeatures();
