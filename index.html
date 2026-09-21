@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Azzam Restaurant – Berlin Neukölln | مطعم عزّام</title>
-  <meta name="description" content="Restaurant Azzam in Berlin Neukölln — Das leckerste Arabische Essen. Vegan, vegetarisch & Fleisch. مطعم عزّام في برلين نيو كولن — أشهى المأكولات العربية." />
+  <meta name="theme-color" content="#0e120d" />
+  <title>مطعم عزّام – برلين نويكولن | Azzam Restaurant</title>
+  <meta name="description" content="Restaurant Azzam in Berlin Neukölln — Das leckerste arabische Essen. Vegan, vegetarisch & Fleisch. مطعم عزّام في برلين نيو كولن — أشهى المأكولات العربية." />
   <meta property="og:title" content="Azzam Restaurant – Berlin Neukölln" />
-  <meta property="og:description" content="Das leckerste Arabische Essen 🍲 Vegan • Vegetarisch • Fleisch — by Chef Hussam Azzam" />
+  <meta property="og:description" content="Das leckerste arabische Essen — Vegan • Vegetarisch • Fleisch — von Küchenchef Hussam Azzam" />
   <meta property="og:type" content="restaurant" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍲</text></svg>" />
+  <meta property="og:image" content="assets/img/hero.jpg" />
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
 
   <!-- الخط: ثمانية (عربي) + بدائل -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -22,11 +24,56 @@
 </head>
 <body>
 
+  <!-- ============ SVG ICON SPRITE ============
+       كل أيقونات الموقع هنا (بدون إيموجي). الاستخدام:
+       <svg class="ico"><use href="#i-phone"></use></svg>
+       ومن JS: icon("phone")
+  -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true" focusable="false">
+    <!-- واجهة -->
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5c2.8 2.6 4.2 5.8 4.2 9.5s-1.4 6.9-4.2 9.5c-2.8-2.6-4.2-5.8-4.2-9.5s1.4-6.9 4.2-9.5Z"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-chevrons-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 6 5 5 5-5M7 13l5 5 5-5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5V12.5M12 16h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 16v-4.5M12 8h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.5-4.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-ornament" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c.7 5.4 4.6 9.3 10 10-5.4.7-9.3 4.6-10 10-.7-5.4-4.6-9.3-10-10 5.4-.7 9.3-4.6 10-10Z"/></symbol>
+
+    <!-- طلب / سلة -->
+    <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+    <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></symbol>
+    <symbol id="i-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+
+    <!-- تواصل / موقع -->
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 32 32" fill="currentColor"><path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.59 4.46 1.72 6.4L3.2 28.8l6.6-1.68a12.72 12.72 0 0 0 6.2 1.6h.01c7.06 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05a12.72 12.72 0 0 0-9.05-3.75zm0 23.36h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.92 1 1.05-3.82-.25-.4a10.56 10.56 0 0 1-1.63-5.63c0-5.86 4.77-10.63 10.64-10.63 2.84 0 5.5 1.11 7.51 3.12a10.55 10.55 0 0 1 3.11 7.52c0 5.86-4.77 10.63-10.63 10.63zm5.83-7.96c-.32-.16-1.89-.93-2.18-1.04-.29-.1-.51-.16-.72.16-.21.32-.83 1.04-1.02 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.9-1.78-2.22-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66s1.15 3.09 1.31 3.3c.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.82.68.77.24 1.46.21 2.01.13.61-.09 1.89-.77 2.16-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-navigation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 19-9-9 19-2-8-8-2Z"/></symbol>
+
+    <!-- طعام / مزايا -->
+    <symbol id="i-chef-hat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+    <symbol id="i-sprout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></symbol>
+    <symbol id="i-drumstick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.4 15.63a7.875 6 135 1 1 6.23-6.23 4.5 3.43 135 0 0-6.23 6.23"/><path d="m8.29 12.71-2.6 2.6a2.5 2.5 0 1 0-1.65 4.65A2.5 2.5 0 1 0 8.7 18.3l2.59-2.59"/></symbol>
+    <symbol id="i-cooking-pot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"/><path d="m4 8 16-4"/><path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-euro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M4 14h9"/><path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2"/></symbol>
+  </svg>
+
   <!-- ============ NAVBAR ============ -->
   <header class="nav" id="site-nav">
     <div class="container">
       <a href="#home" class="brand" aria-label="Azzam Restaurant">
-        <span class="brand-mark">ع</span>
         <span class="brand-text">
           <strong>Azzam</strong>
           <span>Restaurant · Neukölln</span>
@@ -42,15 +89,29 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="lang-btn" id="lang-btn" aria-label="language">
-          <span>🌐</span><span id="lang-btn-label">English</span>
-        </button>
-        <button class="cart-btn" id="cart-btn">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M7 4h-2l-1.2 12a2 2 0 0 0 2 2.2h12.4a2 2 0 0 0 2-2.2L19 4h-6V3a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1zm0 2v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6H7zm10.05 10.2-1-.1H7.1l-.1-.1H5.2L6.2 6h11.6l1 10.2z"/></svg>
+        <!-- مبدّل اللغة: عربي / English / Deutsch -->
+        <div class="lang-menu" id="lang-menu">
+          <button class="lang-btn" id="lang-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-list" aria-label="اللغة">
+            <svg class="ico"><use href="#i-globe"></use></svg>
+            <span id="lang-btn-label">AR</span>
+            <svg class="ico ico-xs lang-caret"><use href="#i-chevron-down"></use></svg>
+          </button>
+          <ul class="lang-list" id="lang-list" role="listbox" aria-label="Language">
+            <li><button type="button" class="lang-opt" role="option" data-lang="ar" lang="ar" aria-selected="true"><span class="lang-code">AR</span><span class="lang-name">العربية</span><svg class="ico lang-check"><use href="#i-check"></use></svg></button></li>
+            <li><button type="button" class="lang-opt" role="option" data-lang="en" lang="en" aria-selected="false"><span class="lang-code">EN</span><span class="lang-name">English</span><svg class="ico lang-check"><use href="#i-check"></use></svg></button></li>
+            <li><button type="button" class="lang-opt" role="option" data-lang="de" lang="de" aria-selected="false"><span class="lang-code">DE</span><span class="lang-name">Deutsch</span><svg class="ico lang-check"><use href="#i-check"></use></svg></button></li>
+          </ul>
+        </div>
+
+        <button class="cart-btn" id="cart-btn" type="button">
+          <svg class="ico"><use href="#i-bag"></use></svg>
           <span class="cart-label" data-i18n="nav.order">اطلب الآن</span>
           <span class="cart-count" id="cart-count">0</span>
         </button>
-        <button class="burger" id="burger" aria-label="menu">☰</button>
+        <button class="burger" id="burger" type="button" aria-label="menu" aria-expanded="false" aria-controls="nav-links">
+          <svg class="ico burger-open"><use href="#i-menu"></use></svg>
+          <svg class="ico burger-close"><use href="#i-close"></use></svg>
+        </button>
       </div>
     </div>
   </header>
@@ -61,33 +122,33 @@
     <div class="hero-overlay"></div>
     <div class="container">
       <div class="hero-content">
-        <span class="hero-badge">📍 Berlin · Neukölln — Sonnenallee 54</span>
+        <span class="hero-badge"><svg class="ico"><use href="#i-map-pin"></use></svg><span class="js-address-short" dir="ltr">Berlin · Neukölln — Sonnenallee 54</span></span>
         <h1><span data-i18n="hero.welcome">أهلاً بكم في مطعم عزّام</span><br /><em data-i18n="hero.tagline">أشهى المأكولات العربية في قلب برلين نويكولن</em></h1>
         <p class="subtitle" data-i18n="hero.sub">أطباق نباتية • نباتية صرفة • مشاوي ولحوم — بإشراف الشيف حسّام عزّام</p>
 
         <div class="hero-chips">
-          <span class="chip">🥗 <span data-i18n="badges.veg">نباتي</span></span>
-          <span class="chip">🌱 <span data-i18n="badges.vegan">نباتي صرف</span></span>
-          <span class="chip">🥩 <span data-i18n="badges.meat">لحم</span></span>
-          <span class="chip">👨🏽‍🍳 Chef Hussam Azzam</span>
+          <span class="chip chip-veg"><svg class="ico"><use href="#i-leaf"></use></svg><span data-i18n="badges.veg">نباتي</span></span>
+          <span class="chip chip-vegan"><svg class="ico"><use href="#i-sprout"></use></svg><span data-i18n="badges.vegan">نباتي صرف</span></span>
+          <span class="chip chip-meat"><svg class="ico"><use href="#i-drumstick"></use></svg><span data-i18n="badges.meat">لحم</span></span>
+          <span class="chip chip-chef"><svg class="ico"><use href="#i-chef-hat"></use></svg><span data-i18n="hero.chef">الشيف حسّام عزّام</span></span>
         </div>
 
         <div class="hero-cta">
-          <a href="#menu" class="btn btn-gold">🍽 <span data-i18n="hero.ctaMenu">تصفّح القائمة</span></a>
-          <a href="#" class="btn btn-green" id="hero-wa-btn">💬 <span data-i18n="hero.ctaOrder">اطلب عبر واتساب</span></a>
+          <a href="#menu" class="btn btn-gold"><svg class="ico"><use href="#i-utensils"></use></svg><span data-i18n="hero.ctaMenu">تصفّح القائمة</span></a>
+          <a href="#" class="btn btn-green js-wa" target="_blank" rel="noopener"><svg class="ico"><use href="#i-whatsapp"></use></svg><span data-i18n="hero.ctaOrder">اطلب عبر واتساب</span></a>
         </div>
       </div>
     </div>
-    <div class="scroll-hint">⌄</div>
+    <a href="#menu" class="scroll-hint" aria-label="scroll down"><svg class="ico"><use href="#i-chevrons-down"></use></svg></a>
   </section>
 
   <!-- ============ INFO STRIP ============ -->
   <div class="strip">
     <div class="container strip-inner">
-      <div class="strip-item"><span class="ico">📍</span><span id="strip-location">Neukölln • Sonnenallee 54, 12045</span></div>
-      <div class="strip-item" id="open-status"><span class="open-dot"></span><span data-i18n="badges.openNow">مفتوح الآن</span></div>
-      <div class="strip-item"><span class="ico">🕗</span><span data-i18n="location.openDays">يومياً</span>&nbsp;·&nbsp;<span data-i18n="location.openTime">من 08:00 حتى 00:00</span></div>
-      <div class="strip-item"><span class="ico">📞</span><span>+49 30 60977541</span></div>
+      <div class="strip-item"><svg class="ico strip-ico"><use href="#i-map-pin"></use></svg><span class="js-address-strip" dir="ltr">Neukölln · Sonnenallee 54, 12045 Berlin</span></div>
+      <div class="strip-item" id="open-status"><span class="open-dot" id="open-dot"></span><span id="open-label" data-i18n="badges.openNow">مفتوح الآن</span></div>
+      <div class="strip-item"><svg class="ico strip-ico"><use href="#i-clock"></use></svg><span><span data-i18n="location.openDays">يومياً</span> · <span class="ltr" data-i18n="location.openTime">08:00 – 00:00</span></span></div>
+      <div class="strip-item"><svg class="ico strip-ico"><use href="#i-phone"></use></svg><a class="js-phone" data-phone-text href="tel:+493060977541" dir="ltr">+49 30 60977541</a></div>
     </div>
   </div>
 
@@ -98,26 +159,28 @@
         <span class="eyebrow" data-i18n="nav.menu">القائمة</span>
         <h2 data-i18n="menu.title">قائمتنا</h2>
         <p data-i18n="menu.subtitle">أشهى الأطباق العربية الأصيلة بأسعار في متناول الجميع</p>
-        <div class="divider">✦</div>
+        <div class="divider"><svg class="ico"><use href="#i-ornament"></use></svg></div>
       </div>
 
       <div class="menu-toolbar reveal">
         <div class="cat-tabs" id="cat-tabs">
-          <button class="cat-tab active" data-cat="all" data-i18n="menu.all">الكل</button>
+          <button class="cat-tab active" type="button" data-cat="all" data-i18n="menu.all">الكل</button>
         </div>
         <div class="menu-tools">
           <div class="search-box">
-            <span class="search-ico">🔍</span>
-            <input type="text" id="menu-search" data-i18n-ph="menu.search" placeholder="ابحث عن طبق…" />
+            <svg class="ico search-ico"><use href="#i-search"></use></svg>
+            <input type="text" id="menu-search" data-i18n-ph="menu.search" placeholder="ابحث عن طبق…" autocomplete="off" />
           </div>
           <label class="filter-toggle">
             <input type="checkbox" id="vegan-toggle" />
+            <svg class="ico"><use href="#i-sprout"></use></svg>
             <span data-i18n="menu.veganOnly">خيارات نباتية فقط</span>
           </label>
         </div>
       </div>
 
       <div class="categories" id="menu-categories"></div>
+      <p class="menu-empty" id="menu-empty" hidden data-i18n="menu.noResults">لا توجد نتائج مطابقة</p>
     </div>
   </section>
 
@@ -127,10 +190,10 @@
       <div class="about-media reveal">
         <img src="assets/img/mezze.jpg" alt="Azzam Restaurant mezze" loading="lazy" />
         <div class="chef-badge">
-          <span class="chef-avatar">👨🏽‍🍳</span>
+          <span class="chef-avatar"><svg class="ico"><use href="#i-chef-hat"></use></svg></span>
           <div>
             <strong data-i18n="about.chef">الشيف</strong>
-            <span>Hussam Azzam</span>
+            <span data-i18n="about.chefName">حسّام عزّام</span>
           </div>
         </div>
       </div>
@@ -148,13 +211,13 @@
   </section>
 
   <!-- ============ LOCATION ============ -->
-  <section id="location" style="background:var(--bg-2)">
+  <section id="location" class="location-section">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow" data-i18n="location.title">موقعنا</span>
+        <span class="eyebrow" data-i18n="nav.location">الموقع</span>
         <h2 data-i18n="location.title">موقعنا</h2>
         <p data-i18n="location.subtitle">سنكون سعداء باستقبالك</p>
-        <div class="divider">✦</div>
+        <div class="divider"><svg class="ico"><use href="#i-ornament"></use></svg></div>
       </div>
 
       <div class="location-grid">
@@ -167,33 +230,33 @@
 
         <div class="info-cards reveal">
           <div class="info-card">
-            <span class="i-ico">📍</span>
+            <span class="i-ico"><svg class="ico"><use href="#i-map-pin"></use></svg></span>
             <div>
               <h4 data-i18n="location.address">العنوان</h4>
-              <div class="val" id="loc-address">Sonnenallee 54, 12045 Berlin</div>
-              <div class="val small">Neukölln · Deutschland</div>
+              <div class="val js-address" dir="ltr">Sonnenallee 54, 12045 Berlin</div>
+              <div class="val small js-address-sub" dir="ltr">Neukölln · Deutschland</div>
             </div>
           </div>
 
           <div class="info-card">
-            <span class="i-ico">🕗</span>
+            <span class="i-ico"><svg class="ico"><use href="#i-clock"></use></svg></span>
             <div>
               <h4 data-i18n="location.hours">ساعات العمل</h4>
               <div class="val" data-i18n="location.openDays">يومياً</div>
-              <div class="val small" data-i18n="location.openTime">من 08:00 حتى 00:00</div>
+              <div class="val small ltr" data-i18n="location.openTime">08:00 – 00:00</div>
             </div>
           </div>
 
           <div class="info-card">
-            <span class="i-ico">📞</span>
+            <span class="i-ico"><svg class="ico"><use href="#i-phone"></use></svg></span>
             <div>
               <h4 data-i18n="location.phone">الهاتف</h4>
-              <a class="val" id="loc-phone" href="tel:+493060977541">+49 30 60977541</a>
+              <a class="val js-phone" data-phone-text href="tel:+493060977541" dir="ltr">+49 30 60977541</a>
             </div>
           </div>
 
           <div class="info-card">
-            <span class="i-ico">🧭</span>
+            <span class="i-ico"><svg class="ico"><use href="#i-navigation"></use></svg></span>
             <div>
               <h4>Google Maps</h4>
               <a class="val" id="directions-link" href="#" target="_blank" rel="noopener" data-i18n="location.directions">احصل على الاتجاهات</a>
@@ -209,11 +272,11 @@
   <!-- ============ CTA ============ -->
   <section class="cta-section" id="cta">
     <div class="container cta-inner reveal">
-      <h2 data-i18n="cta.title">جائع؟ أطلب الآن!</h2>
+      <h2 data-i18n="cta.title">جائع؟ اطلب الآن!</h2>
       <p data-i18n="cta.sub">جهّز طلبك من القائمة وسنصلك عبر واتساب خلال ثوانٍ — طازج وساخن دائماً</p>
       <div class="cta-btns">
-        <a href="#" class="btn btn-green" id="cta-wa-btn">💬 <span data-i18n="hero.ctaOrder">اطلب عبر واتساب</span></a>
-        <a href="#menu" class="btn btn-ghost">🍽 <span data-i18n="hero.ctaMenu">تصفّح القائمة</span></a>
+        <a href="#" class="btn btn-green js-wa" target="_blank" rel="noopener"><svg class="ico"><use href="#i-whatsapp"></use></svg><span data-i18n="hero.ctaOrder">اطلب عبر واتساب</span></a>
+        <a href="#menu" class="btn btn-ghost"><svg class="ico"><use href="#i-utensils"></use></svg><span data-i18n="hero.ctaMenu">تصفّح القائمة</span></a>
       </div>
     </div>
   </section>
@@ -222,16 +285,16 @@
   <section id="contact">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow" data-i18n="contact.title">تواصل معنا</span>
+        <span class="eyebrow" data-i18n="nav.contact">تواصل معنا</span>
         <h2 data-i18n="contact.title">تواصل معنا</h2>
         <p data-i18n="contact.subtitle">اتصل، راسلنا على واتساب، أو زورنا</p>
-        <div class="divider">✦</div>
+        <div class="divider"><svg class="ico"><use href="#i-ornament"></use></svg></div>
       </div>
 
-      <div class="cta-btns reveal" style="justify-content:center">
-        <a href="#" class="btn btn-green" id="contact-wa-btn">💬 <span data-i18n="contact.whatsappBtn">راسلنا على واتساب</span></a>
-        <a href="tel:+493060977541" class="btn btn-ghost">📞 <span data-i18n="contact.callBtn">اتصل بنا</span></a>
-        <a href="https://www.instagram.com/azzam_restaurant" class="btn btn-ghost" target="_blank" rel="noopener" id="social-instagram">📸 <span data-i18n="contact.instagramBtn">تابعنا على إنستغرام</span></a>
+      <div class="cta-btns reveal">
+        <a href="#" class="btn btn-green js-wa" target="_blank" rel="noopener"><svg class="ico"><use href="#i-whatsapp"></use></svg><span data-i18n="contact.whatsappBtn">راسلنا على واتساب</span></a>
+        <a href="tel:+493060977541" class="btn btn-ghost js-phone"><svg class="ico"><use href="#i-phone"></use></svg><span data-i18n="contact.callBtn">اتصل بنا</span></a>
+        <a href="https://www.instagram.com/azzam_restaurant" class="btn btn-ghost js-ig" target="_blank" rel="noopener"><svg class="ico"><use href="#i-instagram"></use></svg><span data-i18n="contact.instagramBtn">تابعنا على إنستغرام</span></a>
       </div>
     </div>
   </section>
@@ -242,93 +305,91 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a class="brand" href="#home">
-            <span class="brand-mark">ع</span>
             <span class="brand-text"><strong>Azzam</strong><span>Restaurant · Neukölln</span></span>
           </a>
           <p data-i18n="footer.tagline">أشهى المأكولات العربية في برلين</p>
           <div class="social-row">
-            <a class="social-btn" id="social-instagram-2" href="https://www.instagram.com/azzam_restaurant" target="_blank" rel="noopener" aria-label="Instagram">📸</a>
-            <a class="social-btn" id="social-wa-2" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
-            <a class="social-btn" href="tel:+493060977541" aria-label="Phone">📞</a>
+            <a class="social-btn js-ig" href="https://www.instagram.com/azzam_restaurant" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-instagram"></use></svg></a>
+            <a class="social-btn js-wa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="ico"><use href="#i-whatsapp"></use></svg></a>
+            <a class="social-btn js-phone" href="tel:+493060977541" aria-label="Phone"><svg class="ico"><use href="#i-phone"></use></svg></a>
           </div>
         </div>
 
-        <div>
+        <div class="footer-col">
           <h4 data-i18n="footer.quickLinks">روابط سريعة</h4>
           <ul class="footer-links">
             <li><a href="#home" data-i18n="nav.home">الرئيسية</a></li>
             <li><a href="#menu" data-i18n="nav.menu">القائمة</a></li>
             <li><a href="#about" data-i18n="nav.about">من نحن</a></li>
             <li><a href="#location" data-i18n="nav.location">الموقع</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">تواصل معنا</a></li>
           </ul>
         </div>
 
-        <div>
+        <div class="footer-col">
           <h4 data-i18n="footer.contact">تواصل</h4>
           <ul class="footer-links">
-            <li><a href="#" id="footer-wa-link">WhatsApp</a></li>
-            <li><a href="#contact" data-i18n="contact.instagramBtn">Instagram</a></li>
-            <li><a href="tel:+493060977541">+49 30 60977541</a></li>
-            <li><span style="color:var(--muted-2)" data-i18n="footer.chef">الشيف: حسّام عزّام</span></li>
+            <li><a href="#" class="js-wa" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="https://www.instagram.com/azzam_restaurant" class="js-ig" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="tel:+493060977541" class="js-phone" data-phone-text dir="ltr">+49 30 60977541</a></li>
+            <li><span class="muted-2" data-i18n="footer.chef">الشيف: حسّام عزّام</span></li>
           </ul>
         </div>
 
-        <div>
+        <div class="footer-col">
           <h4 data-i18n="location.hours">ساعات العمل</h4>
           <ul class="footer-links">
-            <li><span style="color:var(--muted)">🕗 <span data-i18n="location.openDays">يومياً</span></span></li>
-            <li><span style="color:var(--muted)" data-i18n="location.openTime">من 08:00 حتى 00:00</span></li>
-            <li><span style="color:var(--muted-2)">Sonnenallee 54, 12045 Berlin</span></li>
+            <li><span class="muted f-line"><svg class="ico"><use href="#i-clock"></use></svg><span data-i18n="location.openDays">يومياً</span></span></li>
+            <li><span class="muted ltr" data-i18n="location.openTime">08:00 – 00:00</span></li>
+            <li><span class="muted-2 f-line"><svg class="ico"><use href="#i-map-pin"></use></svg><span class="js-address" dir="ltr">Sonnenallee 54, 12045 Berlin</span></span></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
         <span>© <span id="year"></span> Azzam Restaurant — <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></span>
-        <span class="made">Chef <span class="credit">Hussam Azzam</span> 👨🏽‍🍳</span>
+        <span class="made"><svg class="ico"><use href="#i-chef-hat"></use></svg><span class="credit" data-i18n="footer.chef">الشيف: حسّام عزّام</span></span>
       </div>
     </div>
   </footer>
 
   <!-- ============ FLOATING WHATSAPP ============ -->
-  <a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
-    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-      <path d="M16.004 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.59 4.46 1.72 6.4L3.2 28.8l6.6-1.68a12.72 12.72 0 0 0 6.2 1.6h.01c7.06 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05a12.72 12.72 0 0 0-9.05-3.75zm0 23.36h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.92 1 1.05-3.82-.25-.4a10.56 10.56 0 0 1-1.63-5.63c0-5.86 4.77-10.63 10.64-10.63 2.84 0 5.5 1.11 7.51 3.12a10.55 10.55 0 0 1 3.11 7.52c0 5.86-4.77 10.63-10.63 10.63zm5.83-7.96c-.32-.16-1.89-.93-2.18-1.04-.29-.1-.51-.16-.72.16-.21.32-.83 1.04-1.02 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.9-1.78-2.22-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66s1.15 3.09 1.31 3.3c.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.82.68.77.24 1.46.21 2.01.13.61-.09 1.89-.77 2.16-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37z"/>
-    </svg>
+  <a class="wa-float js-wa" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg class="ico"><use href="#i-whatsapp"></use></svg>
   </a>
 
   <!-- ============ CART DRAWER ============ -->
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
   <aside class="drawer" id="cart-drawer" aria-label="Shopping cart">
     <div class="drawer-head">
-      <h3>🛒 <span data-i18n="cart.title">سلّتك</span></h3>
-      <button class="close-btn" id="close-drawer" aria-label="Close">✕</button>
+      <h3><svg class="ico"><use href="#i-bag"></use></svg><span data-i18n="cart.title">سلّتك</span></h3>
+      <button class="close-btn" id="close-drawer" type="button" aria-label="Close"><svg class="ico"><use href="#i-close"></use></svg></button>
     </div>
     <div class="drawer-body" id="cart-body"></div>
     <div class="drawer-foot" id="drawer-foot">
       <div class="order-type-picker">
-        <button class="ot-btn" data-type="delivery"><span class="ot-ico">🚗</span><span data-i18n="cart.delivery">توصيل</span></button>
-        <button class="ot-btn" data-type="pickup"><span class="ot-ico">🏠</span><span data-i18n="cart.pickup">استلام من المطعم</span></button>
+        <button class="ot-btn" type="button" data-type="delivery"><svg class="ico ot-ico"><use href="#i-bike"></use></svg><span data-i18n="cart.delivery">توصيل</span></button>
+        <button class="ot-btn" type="button" data-type="pickup"><svg class="ico ot-ico"><use href="#i-store"></use></svg><span data-i18n="cart.pickup">استلام من المطعم</span></button>
       </div>
       <div class="cart-summary" id="cart-summary">
-        <div class="sum-row"><span data-i18n="cart.subtotal">المجموع الفرعي</span><span id="sum-subtotal">0,00 €</span></div>
-        <div class="sum-row"><span data-i18n="cart.deliveryFee">رسوم التوصيل</span><span style="color:var(--muted-2)" data-i18n="cart.freeDelivery">تحدَّد عند التأكيد</span></div>
-        <div class="sum-row total"><span data-i18n="cart.total">الإجمالي (تقريبي)</span><span class="val" id="sum-total">0,00 €</span></div>
+        <div class="sum-row"><span data-i18n="cart.subtotal">المجموع الفرعي</span><span class="ltr" id="sum-subtotal">0,00 €</span></div>
+        <div class="sum-row"><span data-i18n="cart.deliveryFee">رسوم التوصيل</span><span class="muted-2" data-i18n="cart.freeDelivery">تحدَّد عند التأكيد</span></div>
+        <div class="sum-row total"><span data-i18n="cart.total">الإجمالي (تقريبي)</span><span class="val ltr" id="sum-total">0,00 €</span></div>
       </div>
-      <button class="btn btn-green checkout-btn" id="checkout-btn">💬 <span data-i18n="cart.checkout">إتمام الطلب عبر واتساب</span></button>
-      <button class="btn btn-ghost" id="clear-cart" style="width:100%;margin-top:10px;padding:11px;font-size:0.88rem">🗑 <span data-i18n="cart.clear">إفراغ السلة</span></button>
+      <button class="btn btn-green checkout-btn" id="checkout-btn" type="button"><svg class="ico"><use href="#i-whatsapp"></use></svg><span data-i18n="cart.checkout">إتمام الطلب عبر واتساب</span></button>
+      <button class="btn btn-ghost clear-btn" id="clear-cart" type="button"><svg class="ico"><use href="#i-trash"></use></svg><span data-i18n="cart.clear">إفراغ السلة</span></button>
     </div>
   </aside>
 
   <!-- ============ CHECKOUT MODAL ============ -->
   <div class="modal-backdrop" id="checkout-modal">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
       <div class="modal-head">
         <div>
           <h3 id="checkout-title" data-i18n="checkout.title">إتمام الطلب</h3>
           <p id="checkout-subtitle" data-i18n="checkout.subtitle">أكمل بياناتك وسيُرسل الطلب للمطعم عبر واتساب</p>
         </div>
-        <button class="close-btn" data-close="checkout-modal" aria-label="Close">✕</button>
+        <button class="close-btn" type="button" data-close="checkout-modal" aria-label="Close"><svg class="ico"><use href="#i-close"></use></svg></button>
       </div>
       <form class="checkout-form" id="checkout-form" novalidate>
         <div class="order-summary-mini" id="co-summary"></div>
@@ -364,14 +425,14 @@
           <textarea id="co-notes" data-i18n-ph="checkout.notesPh" placeholder="بدون بصل، حار قليلاً، بدون ثوم…"></textarea>
         </div>
 
-        <button class="btn btn-green" type="submit" id="co-submit">💬 <span data-i18n="checkout.submitDelivery">إرسال طلب التوصيل عبر واتساب</span></button>
+        <button class="btn btn-green" type="submit" id="co-submit"><svg class="ico"><use href="#i-whatsapp"></use></svg><span id="co-submit-label" data-i18n="checkout.submitDelivery">إرسال طلب التوصيل عبر واتساب</span></button>
         <div class="form-hint" id="co-required-hint" data-i18n="checkout.requiredHint">جميع الحقول مطلوبة ما عدا الملاحظات</div>
       </form>
     </div>
   </div>
 
   <!-- ============ TOAST ============ -->
-  <div class="toast-wrap" id="toast-wrap"></div>
+  <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/i18n.js"></script>

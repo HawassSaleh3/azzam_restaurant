@@ -1,15 +1,21 @@
 /* =====================================================================
    Azzam Restaurant — UI Translations (ar / en / de)
    كل نصوص الواجهة هنا. أسماء الأصناف في بيانات القائمة (de/en/ar).
+   ملاحظة: لا إيموجي في النصوص — الأيقونات SVG تُضاف من القالب نفسه.
    ===================================================================== */
 
 const LANG_NAMES = { ar: "العربية", en: "English", de: "Deutsch" };
+const LANG_CODES = { ar: "AR", en: "EN", de: "DE" };
 const LANG_ORDER = ["ar", "en", "de"];
 
 const I18N = {
   ar: {
     dir: "rtl",
     code: "ar",
+    meta: {
+      title: "مطعم عزّام – برلين نويكولن | Azzam Restaurant",
+      description: "مطعم عزّام في برلين نيو كولن — أشهى المأكولات العربية: نباتي، نباتي صرف، مشاوي ولحوم. اطلب عبر واتساب."
+    },
     nav: {
       home: "الرئيسية",
       menu: "القائمة",
@@ -22,13 +28,14 @@ const I18N = {
       welcome: "أهلاً بكم في مطعم عزّام",
       tagline: "أشهى المأكولات العربية في قلب برلين نويكولن",
       sub: "أطباق نباتية • نباتية صرفة • مشاوي ولحوم — بإشراف الشيف حسّام عزّام",
+      chef: "الشيف حسّام عزّام",
       ctaOrder: "اطلب عبر واتساب",
       ctaMenu: "تصفّح القائمة"
     },
     badges: {
-      vegan: "نباتي صرف 🌱",
-      veg: "نباتي 🥗",
-      meat: "لحم 🥩",
+      vegan: "نباتي صرف",
+      veg: "نباتي",
+      meat: "لحم",
       openNow: "مفتوح الآن",
       closedNow: "مغلق حالياً"
     },
@@ -39,8 +46,10 @@ const I18N = {
       all: "الكل",
       add: "أضِف",
       added: "تمت الإضافة",
-      items: "صنف",
-      veganOnly: "خيارات نباتية فقط"
+      // صيغ الجمع (Intl.PluralRules)
+      items: { zero: "لا أصناف", one: "صنف واحد", two: "صنفان", few: "{n} أصناف", many: "{n} صنفاً", other: "{n} صنف" },
+      veganOnly: "خيارات نباتية فقط",
+      noResults: "لا توجد أطباق مطابقة لبحثك"
     },
     cart: {
       title: "سلّتك",
@@ -56,9 +65,7 @@ const I18N = {
       notes: "ملاحظات",
       pickOrderType: "اختر طريقة الاستلام",
       delivery: "توصيل",
-      pickup: "استلام من المطعم",
-      orderTypeDelivery: "🚗 توصيل",
-      orderTypePickup: "🏠 استلام من المطعم"
+      pickup: "استلام من المطعم"
     },
     checkout: {
       title: "إتمام الطلب",
@@ -77,7 +84,9 @@ const I18N = {
       notesPh: "بدون بصل، حار قليلاً، بدون ثوم…",
       submitDelivery: "إرسال طلب التوصيل عبر واتساب",
       submitPickup: "إرسال طلب الاستلام عبر واتساب",
-      requiredHint: "جميع الحقول مطلوبة ما عدا الملاحظات"
+      requiredHint: "جميع الحقول مطلوبة ما عدا الملاحظات",
+      orderType: "نوع الطلب",
+      total: "الإجمالي"
     },
     about: {
       title: "قصتنا",
@@ -87,12 +96,11 @@ const I18N = {
       p3: "نقدّم خيارات تناسب الجميع: أطباق نباتية ونباتية صرفة ولحوم ومشاوي — بأسعار عادلة وكميّات تسرّ العين.",
       chef: "الشيف",
       chefName: "حسّام عزّام",
-      since: "نخدم أهل برلين منذ سنوات",
       features: [
-        { icon: "🍲", title: "أصالة شامية", desc: "وصفات بيتية توارثناها جيلاً بعد جيل" },
-        { icon: "🥬", title: "طازج يومياً", desc: "خضارنا ومكوناتنا تُختار كل صباح" },
-        { icon: "🌱", title: "للجميع", desc: "نباتي، نباتي صرف، ولحوم — لكل زبون طبق" },
-        { icon: "💶", title: "أسعار عادلة", desc: "أشهى نكهة بأفضل سعر في برلين" }
+        { title: "أصالة شامية", desc: "وصفات بيتية توارثناها جيلاً بعد جيل" },
+        { title: "طازج يومياً", desc: "خضارنا ومكوناتنا تُختار كل صباح" },
+        { title: "للجميع", desc: "نباتي، نباتي صرف، ولحوم — لكل زبون طبق" },
+        { title: "أسعار عادلة", desc: "أشهى نكهة بأفضل سعر في برلين" }
       ]
     },
     location: {
@@ -101,7 +109,7 @@ const I18N = {
       address: "العنوان",
       hours: "ساعات العمل",
       openDays: "يومياً",
-      openTime: "من 08:00 حتى 00:00",
+      openTime: "08:00 – 00:00",
       phone: "الهاتف",
       directions: "احصل على الاتجاهات",
       openInMaps: "افتح في خرائط Google"
@@ -123,25 +131,43 @@ const I18N = {
       chef: "الشيف: حسّام عزّام"
     },
     cta: {
-      title: "جائع؟ أطلب الآن!",
+      title: "جائع؟ اطلب الآن!",
       sub: "جهّز طلبك من القائمة وسنصلك عبر واتساب خلال ثوانٍ — طازج وساخن دائماً"
     },
     toast: {
-      cartAdded: "أُضيف إلى السلة ✓",
+      cartAdded: "أُضيف إلى السلة",
+      cartUpdated: "تم تحديث الكمية",
       cartRemoved: "أُزيل من السلة",
       cartCleared: "أُفرغت السلة",
       cartEmpty: "سلّتك فارغة",
-      copyDone: "تم النسخ ✓",
       fillRequired: "يرجى تعبئة جميع الحقول المطلوبة",
-      phoneInvalid: "يرجى إدخال رقم هاتف صحيح"
+      phoneInvalid: "يرجى إدخال رقم هاتف صحيح",
+      orderSent: "تم فتح واتساب لإتمام طلبك"
     },
-    langBtn: "English",
+    wa: {
+      greeting: "مرحباً مطعم عزّام، لدي استفسار.",
+      orderTitle: "طلب جديد من موقع مطعم عزّام",
+      type: "نوع الطلب",
+      delivery: "توصيل",
+      pickup: "استلام من المطعم",
+      name: "الاسم الكامل",
+      phone: "رقم الهاتف",
+      city: "المدينة",
+      district: "المنطقة",
+      address: "العنوان بالتفاصيل",
+      notes: "ملاحظات",
+      total: "الإجمالي"
+    },
     langLabel: "اللغة"
   },
 
   en: {
     dir: "ltr",
     code: "en",
+    meta: {
+      title: "Azzam Restaurant – Berlin Neukölln | Arabic Food, Vegan & Grill",
+      description: "Azzam Restaurant in Berlin Neukölln — the tastiest Arabic food: vegan, vegetarian, grills & meat. Order via WhatsApp."
+    },
     nav: {
       home: "Home",
       menu: "Menu",
@@ -154,13 +180,14 @@ const I18N = {
       welcome: "Welcome to Azzam Restaurant",
       tagline: "The tastiest Arabic food in Berlin Neukölln",
       sub: "Vegan • Vegetarian • Meat & Grills — by Chef Hussam Azzam",
+      chef: "Chef Hussam Azzam",
       ctaOrder: "Order on WhatsApp",
       ctaMenu: "View Menu"
     },
     badges: {
-      vegan: "Vegan 🌱",
-      veg: "Vegetarian 🥗",
-      meat: "Meat 🥩",
+      vegan: "Vegan",
+      veg: "Vegetarian",
+      meat: "Meat",
       openNow: "Open now",
       closedNow: "Closed now"
     },
@@ -171,8 +198,9 @@ const I18N = {
       all: "All",
       add: "Add",
       added: "Added",
-      items: "Items",
-      veganOnly: "Vegan options only"
+      items: { one: "{n} item", other: "{n} items" },
+      veganOnly: "Vegan options only",
+      noResults: "No dishes match your search"
     },
     cart: {
       title: "Your Cart",
@@ -188,9 +216,7 @@ const I18N = {
       notes: "Notes",
       pickOrderType: "Choose order type",
       delivery: "Delivery",
-      pickup: "Pickup",
-      orderTypeDelivery: "🚗 Delivery",
-      orderTypePickup: "🏠 Pickup"
+      pickup: "Pickup"
     },
     checkout: {
       title: "Checkout",
@@ -209,7 +235,9 @@ const I18N = {
       notesPh: "No onions, a little spicy, no garlic…",
       submitDelivery: "Send delivery order on WhatsApp",
       submitPickup: "Send pickup order on WhatsApp",
-      requiredHint: "All fields required except notes"
+      requiredHint: "All fields required except notes",
+      orderType: "Order type",
+      total: "Total"
     },
     about: {
       title: "Our Story",
@@ -219,12 +247,11 @@ const I18N = {
       p3: "We serve everyone: vegan, vegetarian, and meat lovers — fair prices and generous plates.",
       chef: "Chef",
       chefName: "Hussam Azzam",
-      since: "Serving Berlin for years",
       features: [
-        { icon: "🍲", title: "Levantine roots", desc: "Home recipes passed down through generations" },
-        { icon: "🥬", title: "Fresh daily", desc: "Ingredients picked every morning" },
-        { icon: "🌱", title: "For everyone", desc: "Vegan, vegetarian & meat — a dish for each guest" },
-        { icon: "💶", title: "Fair prices", desc: "The best taste at the best price in Berlin" }
+        { title: "Levantine roots", desc: "Home recipes passed down through generations" },
+        { title: "Fresh daily", desc: "Ingredients picked every morning" },
+        { title: "For everyone", desc: "Vegan, vegetarian & meat — a dish for each guest" },
+        { title: "Fair prices", desc: "The best taste at the best price in Berlin" }
       ]
     },
     location: {
@@ -259,21 +286,39 @@ const I18N = {
       sub: "Build your order from the menu and reach us on WhatsApp in seconds — always fresh and hot"
     },
     toast: {
-      cartAdded: "Added to cart ✓",
+      cartAdded: "Added to cart",
+      cartUpdated: "Quantity updated",
       cartRemoved: "Removed from cart",
       cartCleared: "Cart cleared",
       cartEmpty: "Your cart is empty",
-      copyDone: "Copied ✓",
       fillRequired: "Please fill in all required fields",
-      phoneInvalid: "Please enter a valid phone number"
+      phoneInvalid: "Please enter a valid phone number",
+      orderSent: "WhatsApp opened to complete your order"
     },
-    langBtn: "عربي",
+    wa: {
+      greeting: "Hello Azzam Restaurant, I have a question.",
+      orderTitle: "New order from the Azzam Restaurant website",
+      type: "Order type",
+      delivery: "Delivery",
+      pickup: "Pickup",
+      name: "Full name",
+      phone: "Phone",
+      city: "City",
+      district: "District",
+      address: "Address details",
+      notes: "Notes",
+      total: "Total"
+    },
     langLabel: "Language"
   },
 
   de: {
     dir: "ltr",
     code: "de",
+    meta: {
+      title: "Azzam Restaurant – Berlin Neukölln | Arabische Küche, Vegan & Grill",
+      description: "Azzam Restaurant in Berlin Neukölln — das leckerste arabische Essen: vegan, vegetarisch, Grill & Fleisch. Bestellung per WhatsApp."
+    },
     nav: {
       home: "Start",
       menu: "Speisekarte",
@@ -284,17 +329,18 @@ const I18N = {
     },
     hero: {
       welcome: "Willkommen im Azzam Restaurant",
-      tagline: "Das leckerste Arabische Essen in Berlin Neukölln",
-      sub: "Vegan • Vegetarisch • Fleisch & Grill — von Chef Hussam Azzam",
-      ctaOrder: "Über WhatsApp bestellen",
+      tagline: "Das leckerste arabische Essen in Berlin Neukölln",
+      sub: "Vegan • Vegetarisch • Fleisch & Grill — von Küchenchef Hussam Azzam",
+      chef: "Küchenchef Hussam Azzam",
+      ctaOrder: "Per WhatsApp bestellen",
       ctaMenu: "Speisekarte ansehen"
     },
     badges: {
-      vegan: "Vegan 🌱",
-      veg: "Vegetarisch 🥗",
-      meat: "Fleisch 🥩",
+      vegan: "Vegan",
+      veg: "Vegetarisch",
+      meat: "Fleisch",
       openNow: "Jetzt geöffnet",
-      closedNow: "Geschlossen"
+      closedNow: "Derzeit geschlossen"
     },
     menu: {
       title: "Unsere Speisekarte",
@@ -303,8 +349,9 @@ const I18N = {
       all: "Alle",
       add: "Hinzufügen",
       added: "Hinzugefügt",
-      items: "Gerichte",
-      veganOnly: "Nur vegane Optionen"
+      items: { one: "{n} Gericht", other: "{n} Gerichte" },
+      veganOnly: "Nur vegane Optionen",
+      noResults: "Keine Gerichte passen zu deiner Suche"
     },
     cart: {
       title: "Dein Warenkorb",
@@ -313,20 +360,18 @@ const I18N = {
       deliveryFee: "Liefergebühr",
       freeDelivery: "Wird bei Bestätigung festgelegt",
       total: "Gesamt (ca.)",
-      checkout: "Bestellung über WhatsApp abschließen",
+      checkout: "Bestellung per WhatsApp abschließen",
       clear: "Warenkorb leeren",
       remove: "Entfernen",
       name: "Name",
       notes: "Anmerkungen",
       pickOrderType: "Bestellart wählen",
       delivery: "Lieferung",
-      pickup: "Abholung",
-      orderTypeDelivery: "🚗 Lieferung",
-      orderTypePickup: "🏠 Abholung"
+      pickup: "Abholung"
     },
     checkout: {
       title: "Bestellung abschließen",
-      subtitle: "Fülle deine Daten aus und die Bestellung geht per WhatsApp an das Restaurant",
+      subtitle: "Fülle deine Daten aus — die Bestellung geht per WhatsApp an das Restaurant",
       fullName: "Vollständiger Name",
       fullNamePh: "z. B. Ahmed Mohammad",
       phone: "Telefonnummer",
@@ -339,67 +384,82 @@ const I18N = {
       addressPh: "Straße, Hausnummer, Etage, Klingel…",
       notes: "Anmerkungen (optional)",
       notesPh: "Ohne Zwiebeln, etwas scharf, ohne Knoblauch…",
-      submitDelivery: "Lieferbestellung über WhatsApp senden",
-      submitPickup: "Abholbestellung über WhatsApp senden",
-      requiredHint: "Alle Felder außer Anmerkungen sind Pflicht"
+      submitDelivery: "Lieferbestellung per WhatsApp senden",
+      submitPickup: "Abholbestellung per WhatsApp senden",
+      requiredHint: "Alle Felder außer Anmerkungen sind Pflichtfelder",
+      orderType: "Bestellart",
+      total: "Gesamt"
     },
     about: {
       title: "Unsere Geschichte",
       subtitle: "Geschmack der Levante im Herzen von Neukölln",
       p1: "Das Azzam Restaurant liegt im lebendigen Neukölln, wo levantinische Küche auf echte arabische Gastfreundschaft trifft.",
-      p2: "Von cremigem Hummus und knusprigem Falafel bis zu Grillgerichten — alles wird täglich frisch und mit Sorgfalt zubereitet.",
+      p2: "Von cremigem Hummus und knusprigen Falafel bis zu Grillgerichten — alles wird täglich frisch und mit Sorgfalt zubereitet.",
       p3: "Für alle etwas dabei: vegan, vegetarisch und Fleisch — faire Preise und großzügige Portionen.",
-      chef: "Chef",
+      chef: "Küchenchef",
       chefName: "Hussam Azzam",
-      since: "Seit Jahren in Berlin",
       features: [
-        { icon: "🍲", title: "Levantinische Wurzeln", desc: "Hausrezepte über Generationen weitergegeben" },
-        { icon: "🥬", title: "Täglich frisch", desc: "Zutaten jeden Morgen ausgewählt" },
-        { icon: "🌱", title: "Für alle", desc: "Vegan, vegetarisch & Fleisch — für jeden Gast" },
-        { icon: "💶", title: "Faire Preise", desc: "Bester Geschmack zum besten Preis in Berlin" }
+        { title: "Levantinische Wurzeln", desc: "Hausrezepte, über Generationen weitergegeben" },
+        { title: "Täglich frisch", desc: "Zutaten werden jeden Morgen ausgewählt" },
+        { title: "Für alle", desc: "Vegan, vegetarisch & Fleisch — für jeden Gast" },
+        { title: "Faire Preise", desc: "Bester Geschmack zum besten Preis in Berlin" }
       ]
     },
     location: {
-      title: "Finde uns",
+      title: "So findest du uns",
       subtitle: "Wir freuen uns auf deinen Besuch",
       address: "Adresse",
       hours: "Öffnungszeiten",
       openDays: "Täglich",
-      openTime: "08:00 – 00:00",
+      openTime: "08:00 – 00:00 Uhr",
       phone: "Telefon",
       directions: "Route anzeigen",
       openInMaps: "In Google Maps öffnen"
     },
     contact: {
-      title: "Kontaktiere uns",
+      title: "Kontakt",
       subtitle: "Ruf an, schreib uns auf WhatsApp oder komm vorbei",
       whatsappBtn: "Schreib uns auf WhatsApp",
       callBtn: "Ruf uns an",
       instagramBtn: "Folge uns auf Instagram"
     },
     footer: {
-      tagline: "Das leckerste Arabische Essen in Berlin",
-      quickLinks: "Schnelllinks",
+      tagline: "Das leckerste arabische Essen in Berlin",
+      quickLinks: "Schnellzugriff",
       menu: "Speisekarte",
       contact: "Kontakt",
       follow: "Folge uns",
       rights: "Alle Rechte vorbehalten",
-      chef: "Chef: Hussam Azzam"
+      chef: "Küchenchef: Hussam Azzam"
     },
     cta: {
       title: "Hungrig? Jetzt bestellen!",
-      sub: "Stell deine Bestellung zusammen und erreiche uns in Sekunden über WhatsApp — immer frisch und heiß"
+      sub: "Stell deine Bestellung zusammen und erreiche uns in Sekunden per WhatsApp — immer frisch und heiß"
     },
     toast: {
-      cartAdded: "Zum Warenkorb hinzugefügt ✓",
+      cartAdded: "Zum Warenkorb hinzugefügt",
+      cartUpdated: "Menge aktualisiert",
       cartRemoved: "Aus dem Warenkorb entfernt",
       cartCleared: "Warenkorb geleert",
       cartEmpty: "Dein Warenkorb ist leer",
-      copyDone: "Kopiert ✓",
       fillRequired: "Bitte fülle alle Pflichtfelder aus",
-      phoneInvalid: "Bitte gib eine gültige Telefonnummer ein"
+      phoneInvalid: "Bitte gib eine gültige Telefonnummer ein",
+      orderSent: "WhatsApp wurde geöffnet, um deine Bestellung abzuschließen"
     },
-    langBtn: "العربية",
+    wa: {
+      greeting: "Hallo Azzam Restaurant, ich habe eine Frage.",
+      orderTitle: "Neue Bestellung über die Website des Azzam Restaurants",
+      type: "Bestellart",
+      delivery: "Lieferung",
+      pickup: "Abholung",
+      name: "Vollständiger Name",
+      phone: "Telefonnummer",
+      city: "Stadt",
+      district: "Bezirk",
+      address: "Vollständige Adresse",
+      notes: "Anmerkungen",
+      total: "Gesamt"
+    },
     langLabel: "Sprache"
   }
 };

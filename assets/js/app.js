@@ -1,6 +1,6 @@
 /* =====================================================================
    Azzam Restaurant — App Logic
-   لغة (ع/إن) • قائمة • سلة تسوق • طلب عبر واتساب • خريطة Google
+   لغة (عربي / English / Deutsch) • قائمة • سلة تسوق • طلب عبر واتساب • خريطة
    ===================================================================== */
 
 (function () {
@@ -10,9 +10,18 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  /* ---------------- icons (SVG sprite in index.html) ---------------- */
+  const icon = (name, cls = "") =>
+    `<svg class="ico${cls ? " " + cls : ""}" aria-hidden="true" focusable="false"><use href="#i-${name}"></use></svg>`;
+
+  // أيقونة كل نوع طبق + كل ميزة في قسم «من نحن» (مستقلة عن اللغة)
+  const DIET_ICONS = { vegan: "sprout", veg: "leaf", meat: "drumstick" };
+  const FEATURE_ICONS = ["cooking-pot", "sun", "users", "euro"];
+
   /* ---------------- state ---------------- */
+  const savedLang = localStorage.getItem("azzam_lang");
   const state = {
-    lang: localStorage.getItem("azzam_lang") || "ar",
+    lang: LANG_ORDER.includes(savedLang) ? savedLang : "ar",
     cart: JSON.parse(localStorage.getItem("azzam_cart") || "[]"),
     orderType: localStorage.getItem("azzam_orderType") || "delivery",
     activeCat: "all",
@@ -28,69 +37,96 @@
     return key.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : key), dict);
   };
 
-  const nextLang = () => {
-    const i = LANG_ORDER.indexOf(state.lang);
-    return LANG_ORDER[(i + 1) % LANG_ORDER.length];
+  // صيغ الجمع: menu.items = { one, two, few, many, other }
+  const plural = (key, n) => {
+    const forms = t(key);
+    if (typeof forms === "string") return `${n} ${forms}`;
+    let cat = "other";
+    try { cat = new Intl.PluralRules(state.lang).select(n); } catch (e) { /* fallback */ }
+    if (n === 0 && forms.zero) cat = "zero";
+    const tpl = forms[cat] || forms.other || "";
+    return tpl.replace("{n}", n);
   };
+
+  const escapeHtml = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   const itemName = (item, lang = state.lang) => item[lang] || item.de || item.ar;
 
-  const itemSub = (item) => {
-    if (state.lang === "ar") return item.de;
-    return item.ar;
-  };
+  // الاسم الثانوي تحت اسم الطبق: ألماني في الواجهة العربية، وعربي في الإنجليزية/الألمانية
+  const itemSub = (item) => (state.lang === "ar" ? item.de : item.ar);
 
-  const fmtEuro = (n) => {
-    return n.toFixed(2).replace(".", ",") + " €";
-  };
+  const fmtEuro = (n) => n.toFixed(2).replace(".", ",") + " €";
+
+  // في النص العربي الخام (مثل رسالة واتساب) تُحاط الأرقام اللاتينية بعلامة LRM
+  // حتى لا يعكس تطبيق واتساب ترتيب مقاطع الرقم أو السعر.
+  const LRM = "\u200E";
+  const ltrText = (s) => (I18N[state.lang].dir === "rtl" ? `${LRM}${s}${LRM}` : s);
 
   /* ---------------- language ---------------- */
-  function renderStaticTexts() {
+  function applyDocumentLang() {
+    const dict = I18N[state.lang];
     document.documentElement.lang = state.lang;
-    document.documentElement.dir = I18N[state.lang].dir;
-    document.body.classList.toggle("rtl", state.lang === "ar");
-  }
-
-  function setDirDependentStyles() {
-    const isRTL = state.lang === "ar";
-    document.documentElement.style.setProperty("--dir-side-start", isRTL ? "right" : "left");
-    document.documentElement.style.setProperty("--dir-side-end", isRTL ? "left" : "right");
+    document.documentElement.dir = dict.dir;
+    document.body.classList.toggle("rtl", dict.dir === "rtl");
+    document.title = t("meta.title");
+    const md = $('meta[name="description"]');
+    if (md) md.setAttribute("content", t("meta.description"));
   }
 
   function bindStaticTexts() {
     $$("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      const value = t(key);
+      const value = t(el.getAttribute("data-i18n"));
       if (typeof value === "string") el.textContent = value;
     });
     $$("[data-i18n-ph]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-ph");
-      const value = t(key);
+      const value = t(el.getAttribute("data-i18n-ph"));
       if (typeof value === "string") el.setAttribute("placeholder", value);
     });
+
+    // مبدّل اللغة
     const lb = $("#lang-btn-label");
-    if (lb) lb.textContent = LANG_NAMES[nextLang()] || "English";
+    if (lb) lb.textContent = LANG_CODES[state.lang];
+    const langBtn = $("#lang-btn");
+    if (langBtn) langBtn.setAttribute("aria-label", t("langLabel"));
+    $$(".lang-opt").forEach((b) => {
+      const active = b.dataset.lang === state.lang;
+      b.classList.toggle("active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
+    });
 
-    // brand mark letter responds to language
-    $$(".brand-mark").forEach((el) => (el.textContent = state.lang === "ar" ? "ع" : "A"));
-
-    // category tabs re-labeled (names come from menu data)
-    buildCatTabs();
     const y = $("#year");
     if (y) y.textContent = new Date().getFullYear();
   }
 
   function setLanguage(lang) {
+    if (!I18N[lang]) return;
     state.lang = lang;
     persistLang();
-    setDirDependentStyles();
+    applyDocumentLang();
+    bindStaticTexts();
     buildCatTabs();
     buildFeatures();
     buildMenu();
     renderCart();
-    renderStaticTexts();
-    bindStaticTexts();
+    renderOpenStatus();
     fillConfig();
+    closeLangMenu();
+  }
+
+  /* ---------------- language dropdown ---------------- */
+  function openLangMenu() {
+    $("#lang-menu").classList.add("open");
+    $("#lang-btn").setAttribute("aria-expanded", "true");
+  }
+  function closeLangMenu() {
+    const m = $("#lang-menu");
+    if (!m) return;
+    m.classList.remove("open");
+    $("#lang-btn").setAttribute("aria-expanded", "false");
+  }
+  function toggleLangMenu() {
+    $("#lang-menu").classList.contains("open") ? closeLangMenu() : openLangMenu();
   }
 
   /* ---------------- menu rendering ---------------- */
@@ -100,19 +136,17 @@
 
     MENU_CATEGORIES.forEach((cat) => {
       const items = MENU_ITEMS.filter((i) => i.cat === cat.id);
-      const visible = items.filter((i) => matchFilter(i));
       const block = document.createElement("section");
       block.className = "category-block";
       block.dataset.cat = cat.id;
-      if (visible.length === 0) block.classList.add("category-hidden");
 
-      const title = itemName(cat);
+      const title = escapeHtml(itemName(cat));
       block.innerHTML = `
         <div class="cat-head">
           <div class="cat-head-img"><img src="${cat.img}" alt="${title}" loading="lazy" /></div>
           <div class="cat-head-txt">
             <h3>${title}</h3>
-            <span class="cat-tagline">${items.length} ${t("menu.items")}</span>
+            <span class="cat-tagline">${plural("menu.items", items.length)}</span>
           </div>
         </div>
         <div class="menu-grid">
@@ -120,16 +154,14 @@
         </div>
       `;
       catsWrap.appendChild(block);
-
-      // toggle visibility per item on re-render fades handled in applyFilter
     });
 
     applyFilter();
   }
 
   function dishCard(item) {
-    const name = itemName(item);
-    const sub = itemSub(item);
+    const name = escapeHtml(itemName(item));
+    const sub = escapeHtml(itemSub(item));
     const inCart = state.cart.find((c) => c.id === item.id);
     const qty = inCart ? inCart.qty : 0;
     const dietLabel = t(`badges.${item.diet}`);
@@ -144,19 +176,19 @@
             onerror="this.onerror=null; this.src='${catImg}';" />
         </div>
         <div class="dish-top">
-          <div class="dish-name">${name}<span class="de">${sub}</span></div>
+          <div class="dish-name">${name}<bdi class="de">${sub}</bdi></div>
           <div class="price">${fmtEuro(item.price)}</div>
         </div>
         <div class="dish-badges">
-          <span class="diet ${item.diet}">${dietLabel}</span>
+          <span class="diet ${item.diet}">${icon(DIET_ICONS[item.diet] || "leaf")}<span>${dietLabel}</span></span>
         </div>
         <div class="dish-actions">
           <div class="qty" data-qty="${item.id}">
-            <button data-dec="minus" aria-label="-">−</button>
+            <button type="button" data-dec aria-label="-">−</button>
             <span data-count>${qty}</span>
-            <button data-inc="plus" aria-label="+">+</button>
+            <button type="button" data-inc aria-label="+">+</button>
           </div>
-          <button class="add-btn" data-add="${item.id}">${qty > 0 ? t("menu.added") : t("menu.add")}</button>
+          <button type="button" class="add-btn${qty > 0 ? " in-cart" : ""}" data-add="${item.id}">${qty > 0 ? t("menu.added") : t("menu.add")}</button>
         </div>
       </article>
     `;
@@ -167,7 +199,7 @@
     if (!catOk) return false;
     if (state.veganOnly && item.diet !== "vegan") return false;
     if (state.search) {
-      const q = state.search.toLowerCase();
+      const q = state.search.trim().toLowerCase();
       const hay = `${item.de} ${item.ar} ${item.en || ""}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
@@ -175,22 +207,25 @@
   }
 
   function applyFilter() {
+    let anyShown = false;
     $$(".category-block").forEach((block) => {
       const catId = block.dataset.cat;
       const items = MENU_ITEMS.filter((i) => i.cat === catId);
-      const anyVisible = items.some(matchFilter);
-
-      const catHidden = state.activeCat !== "all" && state.activeCat !== catId;
-      block.classList.toggle("category-hidden", !anyVisible || catHidden);
+      let visibleInCat = 0;
 
       items.forEach((item) => {
         const card = $(`.dish[data-id="${item.id}"]`, block);
-        if (card) {
-          const show = state.activeCat === "all" || catId === state.activeCat;
-          card.style.display = show && matchFilter(item) ? "" : "none";
-        }
+        if (!card) return;
+        const show = matchFilter(item);
+        card.style.display = show ? "" : "none";
+        if (show) visibleInCat++;
       });
+
+      block.classList.toggle("category-hidden", visibleInCat === 0);
+      if (visibleInCat > 0) anyShown = true;
     });
+    const empty = $("#menu-empty");
+    if (empty) empty.hidden = anyShown;
   }
 
   function setCategory(catId) {
@@ -219,13 +254,17 @@
       line.qty = Math.max(0, line.qty + delta);
     } else if (delta > 0) {
       state.cart.push({ id, qty: delta, price: item.price });
+    } else {
+      return; // nothing to decrement
     }
+    const stillIn = state.cart.some((c) => c.id === id && c.qty > 0);
     state.cart = state.cart.filter((c) => c.qty > 0);
     persistCart();
     refreshMenuCard(id);
     renderCart();
     cartBadge();
-    toast(t("toast.cartAdded"), "ok");
+    if (delta > 0) toast(t("toast.cartAdded"), "ok");
+    else toast(stillIn ? t("toast.cartUpdated") : t("toast.cartRemoved"));
   }
 
   function setQty(id, qty) {
@@ -249,8 +288,6 @@
   }
 
   function refreshMenuCard(id) {
-    const item = MENU_ITEMS.find((i) => i.id === id);
-    if (!item) return;
     const card = $(`.dish[data-id="${id}"]`);
     if (!card) return;
     const line = state.cart.find((c) => c.id === id);
@@ -266,38 +303,38 @@
 
   function renderCart() {
     const body = $("#cart-body");
-    const lines = state.cart.map((c) => {
-      const item = MENU_ITEMS.find((i) => i.id === c.id);
-      const name = itemName(item);
-      const sub = itemSub(item);
-      return `
-        <div class="cart-line" data-id="${c.id}">
-          <div class="cl-info">
-            <div class="cl-name">${name}</div>
-            <div class="cl-meta">${sub} × ${c.qty}</div>
-          </div>
-          <div class="cl-qty">
-            <button data-cart-dec aria-label="-">−</button>
-            <span>${c.qty}</span>
-            <button data-cart-inc aria-label="+">+</button>
-          </div>
-          <div class="cl-price">${fmtEuro(c.qty * c.price)}</div>
-          <button class="cl-remove" data-cart-remove aria-label="${t("cart.remove")}">🗑</button>
-        </div>
-      `;
-    }).join("");
-
     const summary = $("#cart-summary");
     const foot = $("#drawer-foot");
 
+    // تنظيف أي سطر لصنف لم يعد موجوداً في القائمة
+    state.cart = state.cart.filter((c) => MENU_ITEMS.some((i) => i.id === c.id));
+
     if (state.cart.length === 0) {
-      body.innerHTML = `<div class="cart-empty"><div class="big">🛒</div>${t("cart.empty")}</div>`;
+      body.innerHTML = `<div class="cart-empty"><div class="big">${icon("bag")}</div>${t("cart.empty")}</div>`;
       summary.style.display = "none";
       foot.style.display = "none";
       return;
     }
 
-    body.innerHTML = lines;
+    body.innerHTML = state.cart.map((c) => {
+      const item = MENU_ITEMS.find((i) => i.id === c.id);
+      return `
+        <div class="cart-line" data-id="${c.id}">
+          <div class="cl-info">
+            <div class="cl-name">${escapeHtml(itemName(item))}</div>
+            <div class="cl-meta"><bdi>${escapeHtml(itemSub(item))}</bdi> × ${c.qty}</div>
+          </div>
+          <div class="cl-qty">
+            <button type="button" data-cart-dec aria-label="-">−</button>
+            <span>${c.qty}</span>
+            <button type="button" data-cart-inc aria-label="+">+</button>
+          </div>
+          <div class="cl-price ltr">${fmtEuro(c.qty * c.price)}</div>
+          <button type="button" class="cl-remove" data-cart-remove aria-label="${t("cart.remove")}" title="${t("cart.remove")}">${icon("trash")}</button>
+        </div>
+      `;
+    }).join("");
+
     summary.style.display = "block";
     foot.style.display = "block";
 
@@ -307,7 +344,6 @@
     if (sumSubtotal) sumSubtotal.textContent = fmtEuro(subtotal);
     if (sumTotal) sumTotal.textContent = fmtEuro(subtotal);
 
-    // order type buttons
     $$(".ot-btn").forEach((b) => b.classList.toggle("active", b.dataset.type === state.orderType));
   }
 
@@ -323,112 +359,60 @@
       toast(t("toast.cartEmpty"), "err");
       return;
     }
-    $("#co-summary").textContent = buildOrderLinesText();
+    $("#co-summary").innerHTML = buildOrderLinesHtml();
 
-    // show / hide district & address for pickup
     const isPickup = state.orderType === "pickup";
     $("#co-district-field").style.display = isPickup ? "none" : "";
     $("#co-address-field").style.display = isPickup ? "none" : "";
 
-    const submit = $("#co-submit");
-    const submitLabel = submit.querySelector("[data-i18n]");
+    const submitLabel = $("#co-submit-label");
     if (submitLabel) submitLabel.textContent = isPickup ? t("checkout.submitPickup") : t("checkout.submitDelivery");
 
     openModal("checkout-modal");
+    setTimeout(() => { const f = $("#co-fullname"); if (f) f.focus(); }, 150);
   }
 
-  function buildOrderLinesText() {
+  // ملخص الطلب داخل نافذة إتمام الطلب (HTML — الأسعار معزولة LTR)
+  function buildOrderLinesHtml() {
+    const price = (n) => `<bdi class="ltr">${fmtEuro(n)}</bdi>`;
     const lines = state.cart.map((c) => {
       const item = MENU_ITEMS.find((i) => i.id === c.id);
-      const name = itemName(item);
-      const labels = {
-        ar: { type: "النوع", total: "الإجمالي" },
-        de: { type: "Typ", total: "Gesamt" },
-        en: { type: "Type", total: "Total" }
-      };
-      const L = labels[state.lang] || labels.en;
-      return `• ${name} x${c.qty} — ${fmtEuro(c.qty * c.price)}`;
+      return `• ${escapeHtml(itemName(item))} ×${c.qty} — ${price(c.qty * c.price)}`;
     });
-    const orderTypeLabel = state.orderType === "pickup" ? t("cart.orderTypePickup") : t("cart.orderTypeDelivery");
-    const labels = {
-      ar: { type: "النوع", total: "الإجمالي" },
-      de: { type: "Typ", total: "Gesamt" },
-      en: { type: "Type", total: "Total" }
-    };
-    const L = labels[state.lang] || labels.en;
-    let txt = lines.join("\n");
-    txt += `\n${L.type}: ${orderTypeLabel}`;
-    txt += `\n${L.total}: ${fmtEuro(cartTotal())}`;
-    return txt;
+    const orderTypeLabel = state.orderType === "pickup" ? t("cart.pickup") : t("cart.delivery");
+    lines.push(`${t("checkout.orderType")}: ${orderTypeLabel}`);
+    lines.push(`<strong>${t("checkout.total")}: ${price(cartTotal())}</strong>`);
+    return lines.join("\n");
   }
 
   function buildWhatsAppMessage(form) {
     const isPickup = state.orderType === "pickup";
-    const labels = {
-      ar: {
-        order: "🛒 طلب جديد من موقع مطعم عزّام",
-        type: "نوع الطلب",
-        delivery: "توصيل",
-        pickup: "استلام من المطعم",
-        name: "الاسم الكامل",
-        phone: "رقم الهاتف",
-        city: "المدينة",
-        district: "المنطقة",
-        address: "العنوان بالتفاصيل",
-        notes: "ملاحظات",
-        total: "الإجمالي"
-      },
-      de: {
-        order: "🛒 Neue Bestellung über die Azzam Restaurant Website",
-        type: "Bestellart",
-        delivery: "Lieferung",
-        pickup: "Abholung",
-        name: "Vollständiger Name",
-        phone: "Telefonnummer",
-        city: "Stadt",
-        district: "Bezirk",
-        address: "Vollständige Adresse",
-        notes: "Anmerkungen",
-        total: "Gesamt"
-      },
-      en: {
-        order: "🛒 New order from the Azzam Restaurant website",
-        type: "Order type",
-        delivery: "Delivery",
-        pickup: "Pickup",
-        name: "Full name",
-        phone: "Phone",
-        city: "City",
-        district: "District",
-        address: "Address details",
-        notes: "Notes",
-        total: "Total"
-      }
-    };
-    const L = labels[state.lang] || labels.en;
+    const L = I18N[state.lang].wa;
+    const sep = "------------------------------";
 
     const lines = state.cart.map((c) => {
       const item = MENU_ITEMS.find((i) => i.id === c.id);
-      return `• ${item.de} (${item.ar}) x${c.qty} — ${fmtEuro(c.qty * c.price)}`;
+      // الاسم بالألمانية + العربية ليفهمه المطبخ دائماً
+      return `• ${item.de} (${item.ar}) ×${c.qty} — ${ltrText(fmtEuro(c.qty * c.price))}`;
     });
 
     const msg = [
-      `${L.order} 🍽`,
-      "------------------------------",
+      L.orderTitle,
+      sep,
       ...lines,
-      `\n${L.total}: ${fmtEuro(cartTotal())}`,
-      "------------------------------",
-      `📍 ${L.type}: ${isPickup ? L.pickup : L.delivery}`,
-      `🧑 ${L.name}: ${form.fullName}`,
-      `📞 ${L.phone}: ${form.phone}`,
+      sep,
+      `${L.total}: ${ltrText(fmtEuro(cartTotal()))}`,
+      `${L.type}: ${isPickup ? L.pickup : L.delivery}`,
+      `${L.name}: ${form.fullName}`,
+      `${L.phone}: ${ltrText(form.phone)}`
     ];
 
     if (!isPickup) {
-      msg.push(`🏙 ${L.city}: ${form.city}`);
-      msg.push(`🗺 ${L.district}: ${form.district}`);
-      msg.push(`🏠 ${L.address}: ${form.address}`);
+      msg.push(`${L.city}: ${form.city}`);
+      msg.push(`${L.district}: ${form.district}`);
+      msg.push(`${L.address}: ${form.address}`);
     }
-    if (form.notes) msg.push(`📝 ${L.notes}: ${form.notes}`);
+    if (form.notes) msg.push(`${L.notes}: ${form.notes}`);
     return msg.join("\n");
   }
 
@@ -454,7 +438,7 @@
 
     const message = buildWhatsAppMessage({ fullName, phone, city, district, address, notes });
     const url = `https://wa.me/${CFG.phone.whatsapp}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener");
 
     closeModal("checkout-modal");
     state.cart = [];
@@ -463,12 +447,7 @@
     buildMenu();
     renderCart();
     closeDrawer();
-    const done = {
-      ar: "✓ تم فتح واتساب لإتمام طلبك",
-      de: "✓ WhatsApp wurde geöffnet, um deine Bestellung abzuschließen",
-      en: "✓ WhatsApp opened to complete your order"
-    };
-    toast(done[state.lang] || done.en, "ok");
+    toast(t("toast.orderSent"), "ok");
   }
 
   /* ---------------- drawers & modals ---------------- */
@@ -479,11 +458,13 @@
   function closeModal(id) { $("#" + id).classList.remove("open"); document.body.style.overflow = ""; }
 
   /* ---------------- toast ---------------- */
+  const TOAST_ICONS = { ok: "check-circle", err: "alert-circle", "": "info" };
   function toast(msg, type = "") {
     const wrap = $("#toast-wrap");
     const el = document.createElement("div");
     el.className = "toast " + type;
-    el.textContent = msg;
+    el.innerHTML = `${icon(TOAST_ICONS[type] || "info", "toast-ico")}<span></span>`;
+    el.lastElementChild.textContent = msg;
     wrap.appendChild(el);
     setTimeout(() => {
       el.classList.add("out");
@@ -491,20 +472,43 @@
     }, 2600);
   }
 
-  /* ---------------- open/closed badge ---------------- */
+  /* ---------------- open/closed badge (Berlin time) ---------------- */
+  function berlinHourNow() {
+    try {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Berlin", hour: "numeric", minute: "numeric", hourCycle: "h23"
+      }).formatToParts(new Date());
+      const h = +parts.find((p) => p.type === "hour").value;
+      const m = +parts.find((p) => p.type === "minute").value;
+      return (h % 24) + m / 60;
+    } catch (e) {
+      const d = new Date();
+      return d.getHours() + d.getMinutes() / 60;
+    }
+  }
+
+  function isOpenNow() {
+    const toH = (s) => { const [h, m] = String(s).split(":").map(Number); return h + (m || 0) / 60; };
+    const open = toH(CFG.hours.open || "08:00");
+    let close = toH(CFG.hours.close || "00:00");
+    if (close <= open) close += 24; // يغلق بعد منتصف الليل
+    const now = berlinHourNow();
+    return (now >= open && now < close) || (now + 24 >= open && now + 24 < close);
+  }
+
   function renderOpenStatus() {
-    const now = new Date();
-    const h = now.getHours() + now.getMinutes() / 60;
-    const open = h >= 8 || h < 0; // opens 08:00 → 00:00 daily
-    const el = $("#open-status");
-    if (!el) return;
-    el.innerHTML = `
-      <span class="open-dot${open ? "" : " closed"}"></span>
-      <span>${open ? t("badges.openNow") : t("badges.closedNow")}</span>`;
+    const dot = $("#open-dot");
+    const label = $("#open-label");
+    if (!dot || !label) return;
+    const open = isOpenNow();
+    dot.classList.toggle("closed", !open);
+    label.setAttribute("data-i18n", open ? "badges.openNow" : "badges.closedNow");
+    label.textContent = open ? t("badges.openNow") : t("badges.closedNow");
   }
 
   /* ---------------- reveal on scroll ---------------- */
   function initReveal() {
+    if (!("IntersectionObserver" in window)) { $$(".reveal").forEach((el) => el.classList.add("visible")); return; }
     const io = new IntersectionObserver(
       (entries) => entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("visible"); io.unobserve(en.target); } }),
       { threshold: 0.12 }
@@ -521,25 +525,26 @@
     wrap.appendChild(allBtn);
     MENU_CATEGORIES.forEach((cat) => {
       const b = document.createElement("button");
+      b.type = "button";
       b.className = "cat-tab";
       b.dataset.cat = cat.id;
       b.textContent = itemName(cat);
       wrap.appendChild(b);
     });
+    $$(".cat-tab", wrap).forEach((b) => b.classList.toggle("active", b.dataset.cat === state.activeCat));
   }
 
   function buildFeatures() {
     const wrap = $("#features");
     if (!wrap) return;
-    const feats = I18N[state.lang] ? I18N[state.lang].about.features : [];
-    if (!feats) return;
+    const feats = (I18N[state.lang] && I18N[state.lang].about.features) || [];
     wrap.innerHTML = feats
       .map(
-        (f) => `
+        (f, i) => `
       <div class="feature">
-        <div class="f-ico">${f.icon}</div>
-        <h4>${f.title}</h4>
-        <p>${f.desc}</p>
+        <div class="f-ico">${icon(FEATURE_ICONS[i] || "utensils")}</div>
+        <h4>${escapeHtml(f.title)}</h4>
+        <p>${escapeHtml(f.desc)}</p>
       </div>`
       )
       .join("");
@@ -549,52 +554,62 @@
   function fillConfig() {
     const loc = CFG.location;
     const addr = `${loc.street}, ${loc.zip} ${loc.city}`;
-    const set = (sel, fn) => { const el = $(sel); if (el) fn(el); };
 
-    set("#loc-address", (el) => (el.textContent = addr));
-    set("#loc-phone", (el) => { el.href = "tel:" + CFG.phone.tel; el.textContent = CFG.phone.display; });
-    set("#strip-location", (el) => (el.textContent = `${loc.district} • ${loc.street}, ${loc.zip}`));
+    // العناوين
+    $$(".js-address").forEach((el) => (el.textContent = addr));
+    $$(".js-address-sub").forEach((el) => (el.textContent = `${loc.district} · ${loc.country}`));
+    $$(".js-address-short").forEach((el) => (el.textContent = `${loc.city} · ${loc.district} — ${loc.street}`));
+    $$(".js-address-strip").forEach((el) => (el.textContent = `${loc.district} · ${loc.street}, ${loc.zip} ${loc.city}`));
 
-    const waBase = `https://wa.me/${CFG.phone.whatsapp}?text=`;
-    const waFloat = (el) => (el.href = waBase + encodeURIComponent(defaultWaText()));
-    set("#wa-float", waFloat);
-    set("#hero-wa-btn", waFloat);
-    set("#cta-wa-btn", waFloat);
-    set("#contact-wa-btn", waFloat);
-    set("#footer-wa-link", (el) => { el.href = waBase + encodeURIComponent(defaultWaText()); el.target = "_blank"; });
-    set("#social-wa-2", (el) => { el.href = waBase + encodeURIComponent(defaultWaText()); el.target = "_blank"; });
-
-    set("#social-instagram", (el) => (el.href = CFG.social.instagram));
-    set("#social-instagram-2", (el) => (el.href = CFG.social.instagram));
-    set("#map-iframe", (el) => (el.src = CFG.maps.embed));
-    set("#co-summary", (el) => { if (!el.textContent.trim()) el.textContent = buildOrderLinesText(); });
-    set("#directions-link", (el) => (el.href = CFG.maps.directions));
-    set("#maps-open-link", (el) => (el.href = CFG.maps.place));
-  }
-
-  function defaultWaText() {
-    const txt = {
-      ar: "مرحباً مطعم عزّام، لدي استفسار 🌟",
-      de: "Hallo Azzam Restaurant, ich habe eine Frage 🌟",
-      en: "Hello Azzam Restaurant, I have a question 🌟"
-    };
-    return txt[state.lang] || txt.en;
-  }
-  function bindEvents() {
-    // nav scroll
-    window.addEventListener("scroll", () => {
-      $("#site-nav").classList.toggle("scrolled", window.scrollY > 20);
+    // الهاتف: الرابط دائماً، والنص فقط حيث يوجد data-phone-text (مع dir=ltr حتى لا ينقلب الرقم في العربية)
+    $$(".js-phone").forEach((el) => {
+      el.href = "tel:" + CFG.phone.tel;
+      if (el.hasAttribute("data-phone-text")) {
+        el.textContent = CFG.phone.display;
+        el.setAttribute("dir", "ltr");
+      }
     });
 
-    // burger
-    $("#burger").addEventListener("click", () => $("#nav-links").classList.toggle("open"));
-    $$("#nav-links a").forEach((a) => a.addEventListener("click", () => $("#nav-links").classList.remove("open")));
+    // واتساب / إنستغرام
+    const waUrl = `https://wa.me/${CFG.phone.whatsapp}?text=${encodeURIComponent(t("wa.greeting"))}`;
+    $$(".js-wa").forEach((el) => { el.href = waUrl; el.target = "_blank"; el.rel = "noopener"; });
+    $$(".js-ig").forEach((el) => (el.href = CFG.social.instagram));
 
-    // language cycle: ar → en → de
-    $("#lang-btn").addEventListener("click", () => setLanguage(nextLang()));
+    // الخريطة
+    const map = $("#map-iframe");
+    if (map && map.src !== CFG.maps.embed) map.src = CFG.maps.embed;
+    const dir = $("#directions-link");
+    if (dir) dir.href = CFG.maps.directions;
+    const place = $("#maps-open-link");
+    if (place) place.href = CFG.maps.place;
+  }
+
+  /* ---------------- events ---------------- */
+  function bindEvents() {
+    // nav scroll
+    const nav = $("#site-nav");
+    const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // burger
+    const burger = $("#burger");
+    const links = $("#nav-links");
+    const setMenu = (open) => {
+      links.classList.toggle("open", open);
+      burger.classList.toggle("is-open", open);
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    burger.addEventListener("click", () => setMenu(!links.classList.contains("open")));
+    $$("#nav-links a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+
+    // language dropdown
+    $("#lang-btn").addEventListener("click", (e) => { e.stopPropagation(); toggleLangMenu(); });
+    $$(".lang-opt").forEach((b) => b.addEventListener("click", () => setLanguage(b.dataset.lang)));
+    document.addEventListener("click", (e) => { if (!e.target.closest("#lang-menu")) closeLangMenu(); });
 
     // category tabs
-    $(".cat-tabs").addEventListener("click", (e) => {
+    $("#cat-tabs").addEventListener("click", (e) => {
       const tab = e.target.closest(".cat-tab");
       if (tab) setCategory(tab.dataset.cat);
     });
@@ -618,10 +633,8 @@
       const qty = e.target.closest(".qty");
       if (qty) {
         const id = qty.dataset.qty;
-        const inc = e.target.closest("[data-inc]");
-        const dec = e.target.closest("[data-dec]");
-        if (inc) addToCart(id, 1);
-        if (dec) addToCart(id, -1);
+        if (e.target.closest("[data-inc]")) addToCart(id, 1);
+        if (e.target.closest("[data-dec]")) addToCart(id, -1);
       }
     });
 
@@ -664,21 +677,24 @@
       if (e.key === "Escape") {
         if ($("#checkout-modal").classList.contains("open")) closeModal("checkout-modal");
         else if ($("#cart-drawer").classList.contains("open")) closeDrawer();
+        else if ($("#lang-menu").classList.contains("open")) closeLangMenu();
+        else if (links.classList.contains("open")) setMenu(false);
       }
     });
   }
 
   /* ---------------- init ---------------- */
   function init() {
-    setDirDependentStyles();
-    renderStaticTexts();
+    applyDocumentLang();
     bindStaticTexts();
+    buildCatTabs();
     buildFeatures();
     fillConfig();
     buildMenu();
     renderCart();
     cartBadge();
     renderOpenStatus();
+    setInterval(renderOpenStatus, 60 * 1000);
     bindEvents();
     initReveal();
   }
